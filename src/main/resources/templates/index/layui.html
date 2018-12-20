@@ -1,0 +1,500 @@
+
+<!DOCTYPE >
+<html xmlns:th="http:/www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>大兴区老梨树桑树资源动态管理系统</title>
+    <script type="text/javascript"
+            src="/lib/jquery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet"  href="/lib/layui/css/layui.css">
+    <script type="text/javascript"  src="/lib/layui/layui.js"></script>
+    <!--图标-->
+    <!--<link rel="stylesheet"-->
+        <!--href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">-->
+
+    <script  src="/lib/Build/Cesium/Cesium.js"></script>
+
+    <link rel="stylesheet" type="text/css"
+          href="/lib/Build/Cesium/Widgets/widgets.css">
+    <script type="text/javascript"  src="/js/init.js"></script>
+    <script type="text/javascript"  src="/js/index/findByInfo/drawpoint.js"></script>
+
+    <script type="text/javascript"  src="/js/index/findByInfo/treeinfo.js"></script>
+
+
+    <link rel="stylesheet" type="text/css"
+          href="/css/Tools-02Tooltip-div.css">
+
+    <script type="text/javascript"  src="/js/index/findByInfo/layuiconfig.js"></script>
+
+
+    <!-- 主页控制 -->
+    <script type="text/javascript"  src="/js/index/index.js"></script>
+
+</head>
+<body class="layui-layout-body">
+
+<div class="layui-layout layui-layout-admin">
+
+    <div class="layui-header"
+         style="background-image:  url('/staticResource/image/bg/layui/bg.jpg')">
+        <div class="layui-logo" style="font-family:STKaiti ;font-size: 24px; color: white">
+            <span class="glyphicon glyphicon-grain">大兴区老梨树桑树资源动态管理系统</span>
+        </div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left"
+            style="cursor:pointer;">
+
+
+        </ul>
+        <!-- /daxing/page/datatableplist.html.jsp-->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">   <a id="cesiumLoad_a">地图展示</a></li>
+            <li class="layui-nav-item"><a href="javascript:flyTohomeview();">初始位置 </a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">测量</a>
+
+
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a id="lengthMeasurement"> <!--  href="javascript:clearEffects();SetMode('drawLine');"-->
+                            *长度测量
+                        </a>
+                    </dd>
+                    <dd>
+                        <a id="areaMeasurement"> <!--href="javascript:clearEffects();SetMode('drawPloy');;"-->*面积测量
+                        </a>
+                    </dd>
+                    <dd>
+                        <a id="clearMeasurement"> <!--href="javascript:clearViewerEntities();"-->*清除绘制
+                        </a>
+                    </dd>
+                </dl>
+            </li>
+
+            <li class="layui-nav-item"><a ><a id="online_map">底图选择</a></a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a id="a_localtile">本地地图</a>
+                    </dd>
+                    <dd>
+                        <a id="a_google">Google地图</a>
+                    </dd>
+                    <dd>
+                        <a id="a_3d">三维地形</a>
+                    </dd>
+                </dl>
+            </li>
+            <!--  	  <li class="layui-nav-item"><a href="${appPath}/plist.html.jsp">*数据管理</a></li> -->
+
+
+            <li class="layui-nav-item"><a
+                    id = "CompanyInformation">公司信息</a></li>
+
+            <li class="layui-nav-item"><a href="/signOut">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-cyan" style="cursor:pointer;">
+        <div class="layui-side-scroll layui-bg-cyan "
+             style=" background-color: #393D49">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree layui-bg-cyan"
+                style="background-color: #393D49" lay-filter="test">
+
+
+                <li class="layui-nav-item "><a href="javascript:;"
+                                               style="font-size: 15px"><i class="fa fa-align-right"
+                                                                          style=" position: relative;right: 10px;top: 1px "></i>定位搜索</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a id="findBytreespecies_a">树种搜索</a>
+                        </dd>
+                        <dd>
+                            <a id="findBytreeage_a">树龄搜索</a>
+                        </dd>
+                   <!--<dd> -->
+                             <!--<a id="findBytreeheight_a">树高查询</a> -->
+                        <!--</dd> -->
+                        <dd>
+                        <a id="findBycontractor_a">承包人搜索</a>
+                    </dd>
+                        <dd>
+                            <a id="findBygid_a">标牌搜索</a>
+                        </dd>
+                        <dd>
+                            <a id="findByarea_a">地名搜索</a>
+                        </dd>
+
+
+
+
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item "><a href="javascript:;"
+                                               style="font-size: 15px"><i class="fa fa-align-right"
+                                                                          style=" position: relative;right: 10px;top: 1px "></i>电子定位</a>
+                    <dl class="layui-nav-child" id="navitemcoordinate">
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item "><a href="javascript:;"
+                                               style="font-size: 15px"><i class="fa fa-align-right"
+                                                                          style=" position: relative;right: 10px;top: 1px "></i>统计分析</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a id="species_statistics_a">树种分析</a>
+                        </dd>
+                        <dd>
+                            <a id="area_statistics_a">行政区统计</a>
+                        </dd>
+                        <dd>
+                            <a id="age_statistics_a">树龄统计</a>
+                        </dd>
+
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item "><a href="javascript:;"
+                                               style="font-size: 15px"><i class="fa fa-align-right"
+                                                                          style=" position: relative;right: 10px;top: 1px "></i>数据维护</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a id="datatableLoad_a">数据管理</a>
+                        </dd>
+
+
+
+                    </dl>
+                </li>
+                <shiro:hasPermission name="data:useradd">
+                    <li class="layui-nav-item "><a href="javascript:;"
+                                                   style="font-size: 15px"><i class="fa fa-align-right"
+                                                                              style=" position: relative;right: 10px;top: 1px "></i>系统管理</a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a id="user_manager_a">用户管理</a>
+                            </dd>
+
+
+                        </dl>
+                    </li>
+                </shiro:hasPermission>
+            </ul>
+        </div>
+
+
+    </div>
+    <!--  -->
+    <div class="layui-body  "
+         style=" height:120%; overflow: hidden; background-color: #393D49"
+         id="main">
+        <!-- 内容主体区域
+        <fieldset class="layui-elem-field layui-field-title"
+            style="margin-top: 50px;">
+            <legend>动态操作Tab</legend>
+        </fieldset> -->
+
+        <div id="cesiumContainer"
+             style=" margin: 0; padding: 0; overflow: hidden;height:120%">
+
+
+        </div>
+        <div id="creditContainer" style="display: none;"></div>
+        <!--
+        <iframe src="http://localhost:8085/daxing/page/index/cesium.jsp"
+            name="datatable" frameborder="0" style="width:100%;height:150%"></iframe>-->
+
+        <!--  <div style="position:absolute;top:500px;left:200px;hight:100px;width:100px;z-index: 9999;background-color: red"><iframe src="" name="datatable"></iframe></div>-->
+
+    </div>
+
+    <div id="findBytreespecies_div">
+
+        <form id="findBytreespecies_form">
+
+
+
+
+            <!--  <input type="text" id="treespecies" name="treespecies" required
+                lay-verify="required" placeholder="请输入树种名" autocomplete="off"
+                class="layui-input">-->
+
+            <div style="height:20px"></div>
+
+            <a style="position:relative;left:70px;">请输入树种：</a><select name="treespecies" id ="treespecies_select" style="height:30px;width:150px;position:relative;left:70px;" >
+            <option value=""></option>
+
+        </select>
+
+
+        </form>
+    </div>
+
+
+    <!--搜索框-->
+    <div id="findBycontractor_div">
+        <form class="layui-form" id="findBycontractor_form"  style="margin-top: 10px">
+            <div class="layui-form-item">
+                <label class="layui-form-label" name="contractor">承包人</label>
+                <div class="layui-input-block">
+                    <input type="text" id="contractor" name="contractor" required  lay-verify="required" placeholder="请输入承包人名" autocomplete="off" class="layui-input" style="width: 300px">
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+    <div id="findByarea_div">
+        <form class="layui-form" id="findByarea_form"   style="margin-top: 10px">
+            <div class="layui-form-item">
+                <label class="layui-form-label" name="area">地名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="area" required  lay-verify="required" placeholder="请输入地名" autocomplete="off" class="layui-input" style="width: 300px">
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+    <div id="findBytreeheight_div">
+
+
+
+        <form id="findBytreeheight_form" style="margin-top: 10px">
+            &nbsp&nbsp&nbsp <a>起始树高：</a> <select name="orgintreeheight"
+                                                 id="orgintreeheight" style="width:100px; ">
+            <option>0</option>
+            <option>1</option>
+            <option>1.5</option>
+            <option>2</option>
+            <option>2.25</option>
+            <option>2.5</option>
+            <option>2.75</option>
+            <option>3</option>
+            <option>3.25</option>
+            <option>3.5</option>
+            <option>3.75</option>
+            <option>4</option>
+            <option>4.25</option>
+            <option>4.5</option>
+            <option>4.75</option>
+            <option>5</option>
+            <option>6</option>
+
+        </select> <a>最大树高：</a> <select name="destreeheight" id="destreeheight"
+                                       style="width:100px;left:20px">
+            <option>0</option>
+            <option>1</option>
+            <option>1.5</option>
+            <option>2</option>
+            <option>2.25</option>
+            <option>2.5</option>
+            <option>2.75</option>
+            <option>3</option>
+            <option>3.25</option>
+            <option>3.5</option>
+            <option>3.75</option>
+            <option>4</option>
+            <option>4.25</option>
+            <option>4.5</option>
+            <option>4.75</option>
+            <option>5</option>
+            <option>6</option>
+        </select>
+        </form>
+    </div>
+    <div id="findBygid_div" style="margin-top: 10px">
+        <form class="layui-form" id="findBygid_form" >
+            <div class="layui-form-item">
+                <label class="layui-form-label" name="id">标牌编号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="id" required  lay-verify="required" placeholder="标牌编号" autocomplete="off" class="layui-input" style="width: 300px">
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div id="findByage_div">
+
+        <form id="findByage_form" style="margin-top: 10px">
+            &nbsp&nbsp&nbsp <a>起始树龄：</a> <select name="orgintreeage"
+                                                 id="origntreeage" style="width:100px position:releative top:20px">
+            <option>40</option>
+            <option>50</option>
+            <option>60</option>
+            <option>70</option>
+            <option>80</option>
+            <option>90</option>
+            <option>100</option>
+        </select> <a>结束树龄：</a> <select name="destreeage" id="destreeage"
+                                       style="width:100px left:20px">
+            <option>40</option>
+            <option>50</option>
+            <option>60</option>
+            <option>70</option>
+            <option>80</option>
+            <option>90</option>
+            <option>100</option></select>
+        </form>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<script>
+    //JavaScript代码区域
+    //layui.use('element', function() {
+    //	var element = layui.element;
+
+    //});
+</script>
+<script type="text/javascript">
+    $(function () {
+
+        layui.use('element', function () {
+            var $ = layui.jquery, element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+            //触发事件
+            var active = {
+                tabAdd: function () {
+                    //新增一个Tab项
+                    element.tabAdd('demo', {
+                        title: '新选项' + (Math.random() * 1000 | 0) //用于演示
+                        ,
+                        content: '内容' + (Math.random() * 1000 | 0),
+                        id: new Date().getTime()
+                        //实际使用一般是规定好的id，这里以时间戳模拟下
+                    })
+                },
+                tabDelete: function (othis) {
+                    //删除指定Tab项
+                    element.tabDelete('demo', '44'); //删除：“商品管理”
+
+                    othis.addClass('layui-btn-disabled');
+                },
+                tabChange: function () {
+                    //切换到指定Tab项
+                    element.tabChange('demo', '22'); //切换到：用户管理
+                }
+            };
+
+            $('.site-demo-active').on('click', function () {
+                var othis = $(this), type = othis.data('type');
+                active[type] ? active[type].call(this, othis) : '';
+            });
+
+            $('.to3d').on('click', function () {
+                element.tabChange('demo', '11');
+                initialGlobeView();
+            });
+
+            //Hash地址的定位
+            var layid = location.hash.replace(/^#test=/, '');
+            element.tabChange('test', layid);
+
+            element.on('tab(demo)', function (elem) {
+                //location.hash = 'test=' + $(this).attr('lay-id');
+                element.render('nav', 'demo');
+                //alert('initialGlobeView()');
+
+            });
+
+        });
+
+        layui.use('form', function () {
+            var form = layui.form;
+
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                layer.msg(JSON.stringify(data.field));
+                return false;
+            });
+        });
+
+    })
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+        getDaxingCoordinate();
+    });
+
+    $(document).on("click", ".coordinatedd", function () {
+        //1.是否删除对话框
+        //var gid = $(this).parents("tr").find("td:eq(0)").text();
+        var coordinateid = $(this).attr("coordinatename-id");
+
+        getDaxingCoordinateByid(coordinateid);
+
+    });
+
+    function getDaxingCoordinateByid(coordinateid) {
+
+        $.ajax({
+            url: "/listDaxingCoordinateByid/" + coordinateid,
+            type: "GET",
+
+            success: function (result) {
+
+                var geomcoordinate = result.geom.substring(6,
+                    result.geom.length - 1).split(" ");
+
+                geomcoordinate[0] = geomcoordinate[0] * 1;
+                geomcoordinate[1] = geomcoordinate[1] * 1;
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(
+                        geomcoordinate[0], geomcoordinate[1], 4000)
+                });
+
+                console.log(result);
+
+            }
+
+        });
+    }
+
+    function getDaxingCoordinate() {
+
+        $.ajax({
+            url: "/listDaxingCoordinate",
+            type: "GET",
+
+            success: function (result) {
+                $.each(result, function (index, item) {
+                    var coordinatename = $("<dd></dd>").addClass(
+                        "coordinatedd").append(
+                        "<a>" + item.coordinatename + "</a>").appendTo(
+                        "#navitemcoordinate");
+
+                    coordinatename.attr("coordinatename-id",
+                        item.coordinateid);
+                })
+
+            }
+
+        });
+    }
+</script>
+
+
+</body>
+</html>

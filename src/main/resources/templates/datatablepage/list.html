@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE >
+<html xmlns:th="http:/www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <!-- jq-->
+    <script type="text/javascript"
+            th:src="@{/lib/jquery/jquery-3.3.1.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/lib/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/lib/layui/layui.js}"></script>
+    <!--bootstrap3-->
+    <script
+            th:src="@{/lib/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
+    <link rel="stylesheet"
+          th:href="@{/lib/bootstrap-3.3.7-dist/bootstrap-3.3.7-dist/css/bootstrap.css}">
+
+
+    <script th:src="@{/js/datatablepage/list.js}"></script>
+    <script th:src="@{/js/datatablepage/edit.js}"></script>
+    <script th:src="@{/js/datatablepage/delete.js}"></script>
+    <script th:src="@{/js/datatablepage/add.js}"></script>
+
+
+    <title>空间数据管理</title>
+
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="This is my page">
+    <!--
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        -->
+
+</head>
+
+<body style="background-color: #EBEBEB">
+<!-- 批量修改模块 -->
+<div class="modal fade" id="pointBatchEditModal" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">批量数据修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="pointmaintenance_batchedit_input"
+                               class="col-sm-2 control-label">维护情况</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="maintenance"
+                                   id="pointmaintenance_batchedit_input" placeholder="维护情况">
+                        </div>
+                        <label for="pointurban_batchedit_input" class="col-sm-2 control-label">区</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="urban"
+                                   id="pointurban_batchedit_input" placeholder="区">
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointtown_batchedit_input" class="col-sm-2 control-label">乡镇</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="town"
+                                   id="pointtown_batchedit_input" placeholder="乡镇">
+                        </div>
+                        <label for="pointvillage_batchedit_input"
+                               class="col-sm-2 control-label">村</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="village"
+                                   id="pointvillage_batchedit_input" placeholder="村">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointarea_batchedit_input"
+                               class="col-sm-2 control-label">位置</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="area"
+                                   id="pointarea_batchedit_input" placeholder="位置">
+                        </div>
+                        <label for="pointcontractor_batchedit_input"
+                               class="col-sm-2 control-label">承包人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="contractor"
+                                   id="pointcontractor_batchedit_input" placeholder="承包人">
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="pointid_batchedit_input"
+                               class="col-sm-2 control-label">标牌编号</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="id"
+                                   id="pointid_batchedit_input" placeholder="标牌编号">
+                        </div>
+                        <label for="pointTreespeciesbatchEdit_select"
+                               class="col-sm-2 control-label">树种</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="treespeciesId"
+                                    id="pointTreespeciesbatchEdit_select">
+
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="pointvisitage_batchedit_input"
+                               class="col-sm-2 control-label">访问树龄</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="visitage"
+                                   id="pointvisitage_batchedit_input" placeholder="访问树龄">
+                        </div>
+                        <label for="pointtreeage_batchedit_input"
+                               class="col-sm-2 control-label">调查树龄</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treeage"
+                                   id="pointtreeage_batchedit_input" placeholder="调查树龄">
+                        </div>
+
+                    </div>
+
+
+                    <!-- gid,oid_,area,x,y,contractor,recorder,treespecies,treeage,treeheight,grounddiameter,treearea,growingpotential,geom -->
+                    <div class="form-group">
+
+                        <label for="pointtreeheight_batchedit_input"
+                               class="col-sm-2 control-label">树高</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treeheight"
+                                   id="pointtreeheight_batchedit_input" placeholder="树高">
+                        </div>
+                        <label for="pointgrounddiameter_batchedit_input"
+                               class="col-sm-2 control-label">地径</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="grounddiameter"
+                                   id="pointgrounddiameter_batchedit_input" placeholder="地径">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointtreearea_batchedit_input"
+                               class="col-sm-2 control-label">冠幅</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treearea"
+                                   id="pointtreearea_batchedit_input" placeholder="冠幅">
+                        </div>
+                        <label for="pointgrowingPotentialbatchEdit_select"
+                               class="col-sm-2 control-label">生长势</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="gpId"
+                                    id="pointgrowingPotentialbatchEdit_select">
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointrecorder_batchedit_input"
+                               class="col-sm-2 control-label">记录人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="recorder"
+                                   id="pointrecorder_batchedit_input" placeholder="记录人">
+                        </div>
+                       <!--<label for="pointdate_batchedit_input"  -->
+                               <!--class="col-sm-2 control-label">日期</label> -->
+                     <!--<div class="col-sm-4"> -->
+                            <!--<input type="text" class="form-control" name="date" -->
+                                 <!--id="pointdate_batchedit_input" placeholder="日期"> -->
+                      <!--</div> -->
+                        <label for="pointy_batchedit_input"
+                               class="col-sm-2 control-label">纬度</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="y"
+                                   id="pointy_batchedit_input" placeholder="纬度">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointx_batchedit_input"
+                               class="col-sm-2 control-label">经度</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="x"
+                                   id="pointx_batchedit_input" placeholder="经度">
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <shiro:hasPermission name="data:treeadd">
+                    <button type="button" class="btn btn-primary"
+                            id="point_Batchupdate_Btn">保存
+                    </button>
+                </shiro:hasPermission>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 员工修改模块 -->
+<div class="modal fade" id="pointEditModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">数据修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="pointmaintenance_edit_input"
+                               class="col-sm-2 control-label">维护情况</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="maintenance"
+                                   id="pointmaintenance_edit_input" placeholder="维护情况">
+                        </div>
+                        <label for="pointurban_edit_input" class="col-sm-2 control-label">区</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="urban"
+                                   id="pointurban_edit_input" placeholder="区">
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointtown_edit_input" class="col-sm-2 control-label">乡镇</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="town"
+                                   id="pointtown_edit_input" placeholder="乡镇">
+                        </div>
+                        <label for="pointvillage_edit_input"
+                               class="col-sm-2 control-label">村</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="village"
+                                   id="pointvillage_edit_input" placeholder="村">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointarea_edit_input"
+                               class="col-sm-2 control-label">位置</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="area"
+                                   id="pointarea_edit_input" placeholder="位置">
+                        </div>
+                        <label for="pointcontractor_edit_input"
+                               class="col-sm-2 control-label">承包人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="contractor"
+                                   id="pointcontractor_edit_input" placeholder="承包人">
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="pointid_edit_input"
+                               class="col-sm-2 control-label">标牌编号</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="id"
+                                   id="pointid_edit_input" placeholder="标牌编号">
+                        </div>
+                        <label for="pointTreespeciesEdit_select"
+                               class="col-sm-2 control-label">树种</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="treespeciesId"
+                                    id="pointTreespeciesEdit_select">
+
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="pointvisitage_edit_input"
+                               class="col-sm-2 control-label">访问树龄</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="visitage"
+                                   id="pointvisitage_edit_input" placeholder="访问树龄">
+                        </div>
+                        <label for="pointtreeage_edit_input"
+                               class="col-sm-2 control-label">调查树龄</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treeage"
+                                   id="pointtreeage_edit_input" placeholder="调查树龄">
+                        </div>
+
+                    </div>
+
+
+                    <!-- gid,oid_,area,x,y,contractor,recorder,treespecies,treeage,treeheight,grounddiameter,treearea,growingpotential,geom -->
+                    <div class="form-group">
+
+                        <label for="pointtreeheight_edit_input"
+                               class="col-sm-2 control-label">树高</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treeheight"
+                                   id="pointtreeheight_edit_input" placeholder="树高">
+                        </div>
+                        <label for="pointgrounddiameter_edit_input"
+                               class="col-sm-2 control-label">地径</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="grounddiameter"
+                                   id="pointgrounddiameter_edit_input" placeholder="地径">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointtreearea_edit_input"
+                               class="col-sm-2 control-label">冠幅</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treearea"
+                                   id="pointtreearea_edit_input" placeholder="冠幅">
+                        </div>
+                        <label for="pointgrowingPotentialEdit_select"
+                               class="col-sm-2 control-label">生长势</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="gpId"
+                                    id="pointgrowingPotentialEdit_select">
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointrecorder_edit_input"
+                               class="col-sm-2 control-label">记录人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="recorder"
+                                   id="pointrecorder_edit_input" placeholder="记录人">
+                        </div>
+                        <!--<label for="pointdate_edit_input"-->
+                               <!--class="col-sm-2 control-label">日期</label> -->
+                        <!--<div class="col-sm-4"> -->
+                          <!--<input type="text" class="form-control" name="date" -->
+                                   <!--id="pointdate_edit_input" placeholder="日期"> -->
+                         <!--</div> -->
+                        <label for="pointx_edit_input"
+                               class="col-sm-2 control-label">经度</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="x"
+                                   id="pointx_edit_input" placeholder="经度">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+
+                        <label for="pointy_edit_input"
+                               class="col-sm-2 control-label">纬度</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="y"
+                                   id="pointy_edit_input" placeholder="纬度">
+                        </div>
+
+                    </div>
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <shiro:hasPermission name="data:treeadd">
+                    <button type="button" class="btn btn-primary" id="point_update_Btn">保存</button>
+                </shiro:hasPermission>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal数据添加弹出框 -->
+<div class="modal fade" id="pointAddModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">数据添加</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="pointmaintenance_add_input"
+                               class="col-sm-2 control-label">维护情况</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="maintenance"
+                                   id="pointmaintenance_add_input" placeholder="维护情况">
+                        </div>
+                        <label for="pointurban_add_input" class="col-sm-2 control-label">区</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="urban"
+                                   id="pointurban_add_input" placeholder="区">
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointtown_add_input" class="col-sm-2 control-label">乡镇</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="town"
+                                   id="pointtown_add_input" placeholder="乡镇">
+                        </div>
+                        <label for="pointvillage_add_input"
+                               class="col-sm-2 control-label">村</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="village"
+                                   id="pointvillage_add_input" placeholder="村">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointarea_add_input"
+                               class="col-sm-2 control-label">位置</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="area"
+                                   id="pointarea_add_input" placeholder="位置">
+                        </div>
+                        <label for="pointcontractor_add_input"
+                               class="col-sm-2 control-label">承包人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="contractor"
+                                   id="pointcontractor_add_input" placeholder="承包人">
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="pointid_add_input"
+                               class="col-sm-2 control-label">标牌编号</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="id"
+                                   id="pointid_add_input" placeholder="标牌编号">
+                        </div>
+                        <label for="pointTreespeciesAdd_select"
+                               class="col-sm-2 control-label">树种</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="treespeciesId"
+                                    id="pointTreespeciesAdd_select">
+
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="pointvisitage_add_input"
+                               class="col-sm-2 control-label">访问树龄</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="visitage"
+                                   id="pointvisitage_add_input" placeholder="访问树龄">
+                        </div>
+                        <label for="pointtreeage_add_input"
+                               class="col-sm-2 control-label">调查树龄</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treeage"
+                                   id="pointtreeage_add_input" placeholder="调查树龄">
+                        </div>
+
+                    </div>
+
+
+                    <!-- gid,oid_,area,x,y,contractor,recorder,treespecies,treeage,treeheight,grounddiameter,treearea,growingpotential,geom -->
+                    <div class="form-group">
+
+                        <label for="pointtreeheight_add_input"
+                               class="col-sm-2 control-label">树高</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treeheight"
+                                   id="pointtreeheight_add_input" placeholder="树高">
+                        </div>
+                        <label for="pointgrounddiameter_add_input"
+                               class="col-sm-2 control-label">地径</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="grounddiameter"
+                                   id="pointgrounddiameter_add_input" placeholder="地径">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointtreearea_add_input"
+                               class="col-sm-2 control-label">冠幅</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="treearea"
+                                   id="pointtreearea_add_input" placeholder="冠幅">
+                        </div>
+                        <label for="pointgrowingPotentialAdd_select"
+                               class="col-sm-2 control-label">生长势</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="gpId"
+                                    id="pointgrowingPotentialAdd_select">
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label for="pointrecorder_add_input"
+                               class="col-sm-2 control-label">记录人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="recorder"
+                                   id="pointrecorder_add_input" placeholder="记录人">
+                        </div>
+                  <!--<label for="pointdate_add_input" -->
+                              <!--class="col-sm-2 control-label">日期</label> -->
+                     <!--<div class="col-sm-4"> -->
+                          <!--<input type="text" class="form-control" name="date" -->
+                                 <!--id="pointdate_add_input" placeholder="日期"> -->
+                        <!--</div> -->
+                        <label for="pointx_add_input"
+                               class="col-sm-2 control-label">经度</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="x"
+                                   id="pointx_add_input" placeholder="经度">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+
+                        <label for="pointy_add_input"
+                               class="col-sm-2 control-label">纬度</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="y"
+                                   id="pointy_add_input" placeholder="纬度">
+                        </div>
+
+                    </div>
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <shiro:hasPermission name="data:treeadd">
+                    <button type="button" class="btn btn-primary" id="point_add_Btn">保存</button>
+                </shiro:hasPermission>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 分页数据显示模块-->
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12  ">
+            <h1>数据管理</h1>
+            <hr style="color: red">
+            <ul class="nav nav-list">
+                <li class="divider"></li>
+            </ul>
+        </div>
+    </div>
+    <!--查询-->
+    <div class="row">
+        <form class="form-horizontal" id="tree_select_form">
+            <div class="form-group">
+
+                <label for="Treespecies_select"
+                       class="col-md-1 control-label">树种</label>
+
+                <div class="col-md-2">
+                    <select class="form-control" name="treespeciesId"
+                            id="Treespecies_select">
+                    </select>
+                </div>
+
+                <label for="contractor_select"
+                       class="col-md-1 control-label">承包人</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" name="contractor"
+                           id="contractor_select" placeholder="承包人">
+                </div>
+                <label for="id"
+                       class="col-md-1 control-label text-center">标牌编号</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" name="id"
+                           id="id" placeholder="标牌编号">
+                </div>
+
+
+                <label for="area"
+                       class="col-md-1 control-label text-center">位置</label>
+                <div class="col-md-2">
+
+                    <input type="text" class="form-control" name="area"
+                           id="area" placeholder="位置">
+                </div>
+
+                <label for="growingPotential_select"
+                       class="col-md-1 control-label" style="	margin-top: 10px">生长势</label>
+
+                <div class="col-md-2">
+                    <select class="form-control" name="gpId" style="margin-top: 10px"
+                            id="growingPotential_select">
+                    </select>
+                </div>
+
+                <label for="Town_select"
+                       class="col-md-1 control-label" style="	margin-top: 10px">镇</label>
+
+                <div class="col-md-2">
+                    <select class="form-control" name="town" style="margin-top: 10px"
+                            id="Town_select">
+                        <option value="请选择">请选择</option>
+                        <option value="庞各庄镇">庞各庄镇</option>
+                        <option value="长子营镇">长子营镇</option>
+                        <option value="采育镇">采育镇</option>
+                        <option value="榆垡镇">榆垡镇</option>
+                        <option value="安定镇">安定镇</option>
+
+                    </select>
+                </div>
+                <label for="Village_select"
+                       class="col-md-1 control-label" style="	margin-top: 10px">村</label>
+
+                <div class="col-md-2">
+                    <select class="form-control" name="village" style="margin-top: 10px"
+                            id="Village_select">
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-11 "></div>
+
+                    <div class="col-md-1 ">
+                        <button type="button" class="btn btn-primary" id="tree_select_Btn">查询</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--编辑按钮-->
+    <div class="row">
+        <div class="col-md-6  "></div>
+
+        <div class="col-md-6" style="left: 342px">
+            <shiro:hasPermission name="data:treeadd">
+                <button type="button" class="btn btn-primary"
+                        id="point_Add_modalBtn">新增
+                </button>
+                <button type="button" class="btn btn-primary"
+                        id="point_BatchEdit_modalBtn">批量修改
+                </button>
+
+                <button type="button" class="btn btn-danger" id="point_Del_modalBtn">批量删除</button>
+            </shiro:hasPermission>
+            <!--  <buttolayui.htmlutton" class="btn btn-primary" onclick="javascrtpt:window.location.href='${appPath}/page/index/layui.jsp'">返回主界面</button>-->
+        </div>
+
+    </div>
+
+
+    <!--数据表格-->
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover" id="points_table"
+                   style="cursor:pointer">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="check_all"/></th>
+                    <th>编号</th>
+                    <th>区域</th>
+                    <th>经度</th>
+                    <th>纬度</th>
+                    <th>承包人</th>
+                    <th>树种</th>
+                    <th>树龄</th>
+                    <th>树高</th>
+                    <th>生长势</th>
+                    <th>地径</th>
+                    <th>操作</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <!--  oid_,area,x,y,contractor,recorder,treespecies,treeage,treeheight,grounddiameter,treearea,growingpotential,st_asgeojson(st_astext(geom))
+    as geom-->
+
+            </table>
+        </div>
+
+    </div>
+    <!-- 分页 -->
+    <div class="row">
+        <div class="col-md-6" id="page_info_area"></div>
+
+        <div class="col-md-6" id="page_info_nav" style="cursor:pointer"></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 我不喜欢用别名，这个mapper的namespace属性表示对应映射的com.web.test.dao.StudentMapper，里面的list方法和StudentMapper里面的方法同名 -->
+<!-- Point.xml需要和PointMapper放在同一个包下面，并且namespace必须写PointMapper的完整类名 -->
+<mapper namespace="com.lc.web.login.dao.UserMapper">
+ 
+
+
+
+
+	<select id="findUser" parameterType="String"
+		resultType="com.lc.web.login.entity.user">
+		SELECT *
+		FROM daxing_shiro_user where 1=1 and
+		account=#{account}
+
+	</select>
+	<select id="findUserByUid" parameterType="java.lang.Integer"
+			resultType="com.lc.web.login.entity.user">
+		SELECT *
+		FROM daxing_shiro_user where 1=1 and
+		uid=#{uid}
+
+	</select>
+	<select id="findRoleByUid" parameterType="java.lang.Integer"
+			resultType="Integer">
+		SELECT roleid
+		FROM daxing_shiro_role_user where 1=1 and
+		userid=#{userid}
+
+	</select>
+
+
+	<select id="listFyUser" resultType="com.lc.web.login.entity.user">
+		SELECT *
+		FROM daxing_shiro_user
+	</select>
+
+
+	<select id="findPermissionByUserId" parameterType="int"
+						 resultType="String">
+	select p.permission from daxing_shiro_user u
+	inner join
+	daxing_shiro_role_user ur on u.uid = ur.userid
+	inner join
+	daxing_shiro_role_permission rp on ur.roleid = rp.roleid
+	inner join
+	daxing_shiro_permission p on rp.permissionid = p.id
+	where u.uid
+	=#{userid};
+
+
+</select>
+
+	<update id="updatePassword" parameterType="com.lc.web.login.entity.user">
+		update
+		daxing_shiro_user set password =#{password} where uid = #{uid}
+
+	</update>
+
+	<update id="updateUser" parameterType="com.lc.web.login.entity.user">
+		update
+		daxing_shiro_user set password =#{password},position=#{position},email=#{email},phone=#{phone} where uid = #{uid}
+
+	</update>
+	<update id="updateUserWithRole" parameterType="map">
+		update
+		daxing_shiro_role_user set roleid =#{roleid} where userid = #{userid}
+
+	</update>
+
+	<insert id="adduser" parameterType="com.lc.web.login.entity.user">
+		INSERT INTO
+		daxing_shiro_user(account,password,position,email,phone,gender)
+		VALUES
+		(#{account},#{password},#{position},#{email},#{phone},#{gender});
+	</insert>
+	<insert id="addUserWithRole" parameterType="map">
+		INSERT INTO
+		daxing_shiro_role_user(userid,roleid)
+		VALUES
+		(#{userid},#{roleid});
+	</insert>
+	<delete id="deleteuserFromRoleAndUser" parameterType="java.lang.Integer">
+		delete from daxing_shiro_role_user where userid = #{userid}
+	</delete>
+	<delete id="deleteuser" parameterType="java.lang.Integer">
+		delete from daxing_shiro_user where uid = #{uid}
+	</delete>
+</mapper>

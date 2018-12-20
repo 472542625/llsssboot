@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.lc.web.resource.dao.treeStatisticsMapper">
+	 
+  
+	<resultMap type="com.lc.web.resource.entity.treeStatistics_treespecies"
+		id="treeStatistics_treespecies">
+		<result column="treename" jdbcType="VARCHAR" property="treename" />
+		<result column="treecount" jdbcType="VARCHAR" property="treecount" />
+	</resultMap>
+	
+	<resultMap type="com.lc.web.resource.entity.treeStatistics_treeage"
+		id="treeStatistics_treeage">
+		<result column="treeage" jdbcType="VARCHAR" property="treeage" />
+		<result column="treecount" jdbcType="VARCHAR" property="treecount" />
+	</resultMap>
+		<resultMap type="com.lc.web.resource.entity.treeStatistics_areaname"
+		id="treeStatistics_areaname">
+		<result column="area_name" jdbcType="VARCHAR" property="area_name" />
+		<result column="treecount" jdbcType="VARCHAR" property="treecount" />
+	</resultMap>
+ 
+ 
+	
+
+	 
+	<select id="listTreeStatistics_treespecies"   resultMap="treeStatistics_treespecies">
+
+
+	 select a.treespeciesname as treename,b.treecount  as treecount from  daxing_treespecies  a left join (SELECT treespecies_id ,COUNT(*) as treecount from daxing_tree GROUP BY treespecies_id  order by treecount DESC )  b on a.treespeciesid = b.treespecies_id
+	</select> 
+	
+		<select id="listTreeStatistics_town"   resultMap="treeStatistics_areaname">
+		select town as area_name ,count(town)as treecount from daxing_tree group by town;
+	 
+	</select> 
+	
+		<select id="listTreeStatistics_treeage"   resultMap="treeStatistics_treeage">
+		SELECT treeage_var as treeage,COUNT(*) as treecount from daxing_tree GROUP BY treeage_var order by treeage_var
+	 
+	</select> 
+
+	 
+</mapper>

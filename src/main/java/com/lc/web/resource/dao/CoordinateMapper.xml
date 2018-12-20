@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.web.resource.dao.CoordinateMapper">
+  <resultMap id="BaseResultMap" type="com.lc.web.resource.entity.Coordinate">
+    <id column="coordinateid" jdbcType="INTEGER" property="coordinateid" />
+
+    <result column="coordinatename" jdbcType="VARCHAR" property="coordinatename" />
+    <result column="geom" jdbcType="VARCHAR" property="geom" />
+  </resultMap>
+
+
+  <select id="listCoordinate"  resultMap="BaseResultMap">
+  select coordinateid,coordinatename,st_astext(geom) as geom from daxingpoint order by coordinateid;
+
+</select>
+  <select id="listCoordinateById" parameterType="INTEGER" resultMap="BaseResultMap">
+    select coordinateid,coordinatename,st_astext(geom) as geom from daxingpoint  where coordinateid = #{coordinateid};
+
+  </select>
+</mapper>
